@@ -7,21 +7,13 @@ app.use(bodyParser.json());
 
 var port = parseInt(process.env.PORT, 10) || 8080;
 
-var inputs = [{ pin: '11', gpio: '17', value: 1 },
-              { pin: '12', gpio: '18', value: 0 }];
-
-// Express route for incoming requests for a customer name
-app.get('/inputs/:id', function(req, res) {
-  res.status(200).send(inputs[req.params.id]);
-}); 
-
 // Express route for any other unrecognised incoming requests
 app.get('*', function(req, res) {
-  res.status(404).send('Unrecognised API call');
+  res.status(404).send('Unrecognized API call');
 });
 
 app.put('/leds', function(req, res) {
-  res.send('Got the following req: ' + JSON.stringify(req.body));
+  res.send(JSON.stringify({}));
   console.log(JSON.stringify(req.body));
 });
 
