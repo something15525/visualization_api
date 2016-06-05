@@ -1,0 +1,15 @@
+{
+  "name": "visualization_api",
+  "version": "0.0.0",
+  "description": "API for sending waveform data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael Limb",
+  "license": "ISC",
+  "dependencies": {
+    "connect": "^3.4.1",
+    "express": "^4.13.4"
+  }
+}
