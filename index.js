@@ -13,7 +13,7 @@ app.get('*', function(req, res) {
 });
 
 app.put('/leds', function(req, res) {
-  res.send(JSON.stringify({}));
+  res.send(JSON.stringify([]));
   console.log(JSON.stringify(req.body));
 });
 
