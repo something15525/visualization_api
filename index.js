@@ -36,6 +36,27 @@ app.put('/leds', function(req, res) {
   }*/
 });
 
+app.post('/solidcolor', function(req, res) {
+  // Grab parameter values
+  var red = req.param('red');
+  var green = req.param('green');
+  var blue = req.param('blue');
+
+  // Set up parameters for python script
+  var params = {
+    args: [red, blue, green]
+  };
+
+  // Run LED script
+  pythonShell.run('scripts/solid.py', params, function(err, results) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send("Red: " + red + " Green: " + green + " Blue: " + blue);
+    }
+  });
+});
+
 // Express route to handle errors
 app.use(function(err, req, res, next) {
   if (req.xhr) {
