@@ -1,5 +1,6 @@
 var bodyParser = require('body-parser');
 var express = require('express');
+var pythonShell = require('python-shell');
 
 var app = express();
 
@@ -13,8 +14,26 @@ app.get('*', function(req, res) {
 });
 
 app.put('/leds', function(req, res) {
-  res.send(JSON.stringify([]));
+  res.status(501).send('Not yet implemented');
+  /*res.send(JSON.stringify([]));
   console.log(JSON.stringify(req.body));
+
+  console.log('Type of body is: ' + typeof(req.body));
+  console.log('Body length is: ' + req.body.length);
+
+  if (req.body.length > 0) {
+    pythonShell.run('scripts/solid.py', function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  } else {
+    pythonShell.run('scripts/clear.py', function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }*/
 });
 
 // Express route to handle errors
