@@ -44,7 +44,7 @@ app.post('/solidcolor', function(req, res) {
 
   // Set up parameters for python script
   var params = {
-    args: [red, blue, green]
+    args: [red, green, blue]
   };
 
   // Run LED script
