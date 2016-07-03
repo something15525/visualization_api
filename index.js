@@ -50,9 +50,11 @@ app.post('/solidcolor', function(req, res) {
   // Run LED script
   pythonShell.run('scripts/solid.py', params, function(err, results) {
     if (err) {
-      res.send(err);
+      res.status(500).send({
+	"error" : err
+      });
     } else {
-      res.send("Red: " + red + " Green: " + green + " Blue: " + blue);
+      res.send({});
     }
   });
 });
