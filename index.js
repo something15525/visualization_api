@@ -19,36 +19,64 @@ var pythonShell = require('python-shell');
 
 var app = express();
 
+/**
+ * This variable is used by the solidcolor endpoint to determine
+ * whether or not the colors should be shown on the LEDS.
+ */
+var shouldShowColors = false;
+
+/**
+ * Used to hold the current color RGB triple used by the solidcolor API.
+ */
+var currentColors = [];
+
 app.use(bodyParser.json());
 
 var port = parseInt(process.env.PORT, 10) || 8080;
+
+function updateColors(res) {
+    // Set up parameters for python script
+    var params = {
+      args: currentColors
+    };
+
+    pythonShell.run('scripts/solid.py', params, function(err, results) {
+      if (err) {
+        res.status(500).send({
+          "error" : err
+        });
+      } else {
+        res.send({});
+      }
+    });
+}
 
 // Express route for any other unrecognised incoming requests
 app.get('*', function(req, res) {
   res.status(404).send('Unrecognized API call');
 });
 
-app.put('/leds', function(req, res) {
-  res.status(501).send('Not yet implemented');
-  /*res.send(JSON.stringify([]));
-  console.log(JSON.stringify(req.body));
+app.post('/color', function(req, res) {
+  // Grab parameters
+  var showColors = req.param("enabled");
 
-  console.log('Type of body is: ' + typeof(req.body));
-  console.log('Body length is: ' + req.body.length);
+  // Save result
+  shouldShowColors = (showColors == 'true');
 
-  if (req.body.length > 0) {
-    pythonShell.run('scripts/solid.py', function(err) {
-      if (err) {
-        console.log(err);
-      }
-    });
+  // Clear colors out if !shouldShowColors
+  if (shouldShowColors) {
+      updateColors(res)
   } else {
-    pythonShell.run('scripts/clear.py', function(err) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  }*/
+      pythonShell.run('scripts/clear.py', function(err) {
+          if (err) {
+              res.status(500).send({
+                  "error" : err
+              });
+          } else {
+              res.send({});
+          }
+      });
+  }
 });
 
 app.post('/solidcolor', function(req, res) {
@@ -57,21 +85,13 @@ app.post('/solidcolor', function(req, res) {
   var green = req.param('green');
   var blue = req.param('blue');
 
-  // Set up parameters for python script
-  var params = {
-    args: [red, green, blue]
-  };
+  // Update current colors
+  currentColors = [red, green, blue];
 
   // Run LED script
-  pythonShell.run('scripts/solid.py', params, function(err, results) {
-    if (err) {
-      res.status(500).send({
-	"error" : err
-      });
-    } else {
-      res.send({});
-    }
-  });
+  if (shouldShowColors) {
+      updateColors(res);
+  }
 });
 
 // Express route to handle errors
